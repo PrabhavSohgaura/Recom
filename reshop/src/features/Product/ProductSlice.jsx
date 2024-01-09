@@ -10,23 +10,25 @@ const initialState = {
 };
 
 export const productSlice = createSlice({
-  name: "product",
+  name: "products",
   initialState,
   extraReducers: (builder) => {
-    builder.addCase("pending", (status) => {
+    builder.addCase(fetchedProducts.pending, (status) => {
       status.status = STATUS.LOADING;
     }),
-      builder.addCase("fullfilled", (status, action) => {
+      builder.addCase(fetchedProducts.fulfilled, (status, action) => {
         status.status = STATUS.IDLE;
         status.products = action.payload;
       }),
-      builder.addCase("error", (status) => {
+      builder.addCase(fetchedProducts.rejected, (status) => {
         status.status = STATUS.ERROR;
       });
   },
 });
 
-export const fetchedProducts = createAsyncThunk("fetch/product", async () => {
+export const fetchedProducts = createAsyncThunk("fetch/products", async () => {
   const data = await axios(`${base_url}products`).then((res) => res.data);
   return data;
 });
+
+export default productSlice.reducer;
